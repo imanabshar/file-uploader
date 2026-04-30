@@ -15,7 +15,15 @@ async function postSignUpForm(req, res) {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.render('signup', { errors: errors.array() });
+      return res.render('signup', {
+        errors: errors.array(),
+        oldInput: {
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          email: req.body.email,
+          username: req.body.username,
+        },
+      });
     }
 
     const { firstName, lastName, email, username, password } = matchedData(req);

@@ -16,10 +16,32 @@
     <% } %>
 
     <form action="/auth/signup" method="POST">
-      <input type="text" name="firstName" placeholder="First Name" />
-      <input type="text" name="lastName" placeholder="Last Name" />
-      <input type="text" name="username" placeholder="Username" required />
-      <input type="email" name="email" placeholder="Email" required />
+      <input
+        type="text"
+        name="firstName"
+        placeholder="First Name"
+        value="<%= locals.oldInput ? oldInput.firstName || '' : '' %>"
+      />
+      <input
+        type="text"
+        name="lastName"
+        placeholder="Last Name"
+        value="<%= locals.oldInput ? oldInput.lastName || '' : '' %>"
+      />
+      <input
+        type="text"
+        name="username"
+        placeholder="Username"
+        value="<%= locals.oldInput ? oldInput.username || '' : '' %>"
+        required
+      />
+      <input
+        type="email"
+        name="email"
+        placeholder="Email"
+        value="<%= locals.oldInput ? oldInput.email || '' : '' %>"
+        required
+      />
       <input type="password" name="password" placeholder="Password" required />
       <input
         type="password"
