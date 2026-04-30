@@ -33,7 +33,7 @@ async function postSignUpForm(req, res) {
 
     const passwordHash = await bcrypt.hash(password, 10);
 
-    await prisma.user.create({
+    const user = await prisma.user.create({
       data: {
         firstName,
         lastName,
@@ -43,8 +43,15 @@ async function postSignUpForm(req, res) {
       },
     });
 
-    console.log(req.user);
-    res.redirect('/');
+    req.logIn(user, (err) => {
+      if (err) {
+        console.error(err);
+        return res.render('signup', {
+          errors: [{ msg: 'Error logging in after sign up' }],
+        });
+      }
+      res.redirect('/');
+    });
   } catch (err) {
     console.error(err);
   }
