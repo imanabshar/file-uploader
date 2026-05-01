@@ -1,8 +1,8 @@
 function requireAuth(req, res, next) {
-  if (!req.user) {
-    return res.redirect('/login');
+  if (req.isAuthenticated()) {
+    return next();
   }
-  next();
+  res.redirect('/auth/login');
 }
 
-module.exports = requireAuth;
+export default requireAuth;

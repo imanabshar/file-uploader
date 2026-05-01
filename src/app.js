@@ -7,6 +7,7 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 
 import authRoutes from './routes/authRoutes.js';
+import fileRoutes from './routes/fileRoutes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -45,5 +46,6 @@ app.get('/', (req, res) => {
   res.render('index', { user: req.user });
 });
 app.use('/auth', authRoutes);
+app.use('/files', fileRoutes);
 
 export default app;
