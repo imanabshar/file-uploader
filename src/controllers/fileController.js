@@ -30,7 +30,7 @@ async function postUploadFile(req, res) {
   }
 }
 
-async function listFiles(req, res,) {
+async function listFiles(req, res) {
   try {
     const files = await prisma.file.findMany({
       where: { userId: req.user.id },
@@ -38,7 +38,7 @@ async function listFiles(req, res,) {
 
     res.render('files/index', { files });
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
 }
 
@@ -60,4 +60,26 @@ async function showFileById(req, res) {
   }
 }
 
-export { showUploadForm, postUploadFile, listFiles, showFileById };
+async function downloadFile(req, res) {
+  try {
+    const fileId = parseInt(req.params.id);
+
+    const file = await prisma.file.findUnique({
+      where: { id: fileId },
+    });
+
+    console.log(file.path);
+
+    res.download(file.path, file.name);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export {
+  showUploadForm,
+  postUploadFile,
+  listFiles,
+  showFileById,
+  downloadFile,
+};
