@@ -8,6 +8,7 @@ import path from 'path';
 
 import authRoutes from './routes/authRoutes.js';
 import fileRoutes from './routes/fileRoutes.js';
+import folderRoutes from './routes/folderRoutes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -47,5 +48,6 @@ app.get('/', (req, res) => {
 });
 app.use('/auth', authRoutes);
 app.use('/files', fileRoutes);
+app.use('/folders', folderRoutes);
 
 export default app;

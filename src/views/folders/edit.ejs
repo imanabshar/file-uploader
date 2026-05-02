@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Edit Folder</title>
+  </head>
+  <body>
+    <h1>Edit Folder</h1>
+
+    <form action="/folders/<%= folder.id %>/edit" method="POST">
+      <input
+        type="text"
+        name="folderName"
+        value="<%= folder.name %>"
+        required
+      />
+      <button type="submit">Save</button>
+    </form>
+
+    <a href="/folders">Cancel</a>
+  </body>
+</html>

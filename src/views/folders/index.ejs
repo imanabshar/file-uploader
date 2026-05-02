@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Folders</title>
+  </head>
+  <body>
+    <h1>My Folders</h1>
+
+    <a href="/folders/new">Create New Folder</a>
+
+    <% if (folders.length === 0) { %>
+    <p>No folders yet.</p>
+    <% } else { %>
+    <ul>
+      <% folders.forEach(folder => { %>
+      <li>
+        <a href="/folders/<%= folder.id %>"><%= folder.name %></a>
+        <span><%= folder.createdAt.toDateString() %></span>
+
+        <a href="/folders/<%= folder.id %>/edit">Edit</a>
+
+        <form
+          action="/folders/<%= folder.id %>/delete"
+          method="POST"
+          style="display: inline"
+        >
+          <button type="submit">Delete</button>
+        </form>
+      </li>
+      <% }) %>
+    </ul>
+    <% } %>
+  </body>
+</html>
