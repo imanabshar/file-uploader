@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>My Files</title>
+  </head>
+  <body>
+    <h1>My Files</h1>
+
+    <a href="/files/upload">Upload File</a>
+
+    <% if (files.length === 0) { %>
+    <p>No files yet.</p>
+    <% } else { %>
+    <ul>
+      <% files.forEach(file => { %>
+      <li>
+        <a href="/files/<%= file.id %>"><%= file.name %></a>
+        <span><%= file.uploadedAt.toDateString() %></span>
+      </li>
+      <% }) %>
+    </ul>
+    <% } %>
+
+    <a href="/">Back</a>
+  </body>
+</html>

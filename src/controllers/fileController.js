@@ -1,11 +1,12 @@
+import { error } from 'console';
 import { prisma } from '../lib/prisma.js';
 
 async function showUploadForm(req, res) {
   const folderId = req.query.folderId || null;
-  res.render('upload', { folderId });
+  res.render('files/upload', { folderId });
 }
 
-async function postUploadFile(req, res, next) {
+async function postUploadFile(req, res) {
   try {
     if (!req.file) {
       return res.render('upload', { error: 'Please select a file' });
@@ -24,9 +25,39 @@ async function postUploadFile(req, res, next) {
     });
 
     res.redirect('/');
-  } catch (err) {
-    next(err);
+  } catch (error) {
+    console.error(error);
   }
 }
 
-export { showUploadForm, postUploadFile };
+async function listFiles(req, res,) {
+  try {
+    const files = await prisma.file.findMany({
+      where: { userId: req.user.id },
+    });
+
+    res.render('files/index', { files });
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+async function showFileById(req, res) {
+  try {
+    const fileId = parseInt(req.params.id);
+
+    const file = await prisma.file.findUnique({
+      where: { id: fileId },
+    });
+
+    if (!file) {
+      return res.status(404).send('File not found');
+    }
+
+    res.render('files/show', { file });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export { showUploadForm, postUploadFile, listFiles, showFileById };

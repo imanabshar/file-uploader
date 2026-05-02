@@ -30,7 +30,7 @@
     <ul>
       <% folder.files.forEach(file => { %>
       <li>
-        <%= file.name %>
+        <a href="/files/<%= file.id %>"><%= file.name %></a>
         <span><%= file.uploadedAt.toDateString() %></span>
       </li>
       <% }) %>
