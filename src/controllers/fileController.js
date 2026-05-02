@@ -1,4 +1,3 @@
-import { error } from 'console';
 import { prisma } from '../lib/prisma.js';
 
 async function showUploadForm(req, res) {
@@ -12,13 +11,15 @@ async function postUploadFile(req, res) {
       return res.render('upload', { error: 'Please select a file' });
     }
 
+    console.log(req.file);
+
     const folderId = req.query.folderId ? parseInt(req.query.folderId) : null;
 
     await prisma.file.create({
       data: {
         name: req.file.originalname,
         size: req.file.size,
-        path: req.file.path,
+        url: req.file.path,
         userId: req.user.id,
         folderId: folderId,
       },
