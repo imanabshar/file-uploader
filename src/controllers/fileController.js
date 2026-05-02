@@ -69,9 +69,16 @@ async function downloadFile(req, res) {
       where: { id: fileId },
     });
 
-    console.log(file.path);
+    if (!file) {
+      return res.status(404).send('File not found');
+    }
 
-    res.download(file.path, file.name);
+    const response = await fetch(file.url);
+    const buffer = await response.arrayBuffer();
+
+    res.setHeader('Content-Disposition', `attachment; filename="${file.name}"`);
+    res.setHeader('Content-Type', response.headers.get('content-type'));
+    res.send(Buffer.from(buffer));
   } catch (error) {
     console.error(error);
   }
