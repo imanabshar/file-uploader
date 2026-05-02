@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title><%= folder.name %></title>
+  </head>
+  <body>
+    <h1><%= folder.name %></h1>
+    <p>Created: <%= folder.createdAt.toDateString() %></p>
+
+    <a href="/folders/<%= folder.id %>/edit">Edit</a>
+
+    <form
+      action="/folders/<%= folder.id %>/delete"
+      method="POST"
+      style="display: inline"
+    >
+      <button type="submit">Delete</button>
+    </form>
+
+    <hr />
+
+    <h2>Files</h2>
+
+    <a href="/files/upload?folderId=<%= folder.id %>">Upload File</a>
+
+    <% if (folder.files.length === 0) { %>
+    <p>No files yet.</p>
+    <% } else { %>
+    <ul>
+      <% folder.files.forEach(file => { %>
+      <li>
+        <%= file.name %>
+        <span><%= file.uploadedAt.toDateString() %></span>
+      </li>
+      <% }) %>
+    </ul>
+    <% } %>
+
+    <a href="/folders">Back to Folders</a>
+  </body>
+</html>

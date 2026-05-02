@@ -69,6 +69,25 @@ async function editFolder(req, res) {
   }
 }
 
+async function showFolderById(req, res, next) {
+  try {
+    const folderId = parseInt(req.params.id);
+
+    const folder = await prisma.folder.findUnique({
+      where: { id: folderId },
+      include: { files: true },
+    });
+
+    if (!folder) {
+      return res.status(404).send('Folder not found');
+    }
+
+    res.render('folders/show', { folder });
+  } catch (err) {
+    next(err);
+  }
+}
+
 export {
   showCreateFolderForm,
   postCreateFolder,
@@ -76,4 +95,5 @@ export {
   deleteFolder,
   showEditFolderForm,
   editFolder,
+  showFolderById,
 };
