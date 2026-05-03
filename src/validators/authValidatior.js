@@ -17,8 +17,10 @@ const validateSignup = [
     .trim()
     .notEmpty()
     .withMessage('Username is required')
+    .bail()
     .isLength({ min: 3, max: 20 })
     .withMessage('username must be between 3 and 20 characters')
+    .bail()
     .isAlphanumeric()
     .withMessage('username can only contain letters and numbers'),
 
@@ -26,18 +28,21 @@ const validateSignup = [
     .trim()
     .notEmpty()
     .withMessage('email is required')
+    .bail()
     .isEmail()
     .withMessage('must be a valid email'),
 
   body('password')
     .notEmpty()
     .withMessage('password is required')
+    .bail()
     .isLength({ min: 6 })
     .withMessage('password must be at least 6 characters'),
 
   body('confirmPassword')
     .notEmpty()
     .withMessage('please confirm your password')
+    .bail()
     .custom((value, { req }) => {
       if (value !== req.body.password) {
         throw new Error('passwords do not match');
