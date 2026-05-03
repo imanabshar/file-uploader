@@ -5,10 +5,10 @@ async function showUploadForm(req, res) {
   res.render('files/upload', { folderId });
 }
 
-async function postUploadFile(req, res) {
+async function postUploadFile(req, res, next) {
   try {
     if (!req.file) {
-      return res.render('upload', { error: 'Please select a file' });
+      return res.render('files/upload', { error: 'Please select a file' });
     }
 
     const folderId = req.query.folderId ? parseInt(req.query.folderId) : null;
@@ -25,11 +25,11 @@ async function postUploadFile(req, res) {
 
     res.redirect('/');
   } catch (error) {
-    console.error(error);
+    next(error);
   }
 }
 
-async function listFiles(req, res) {
+async function listFiles(req, res, next) {
   try {
     const files = await prisma.file.findMany({
       where: { userId: req.user.id },
@@ -37,11 +37,11 @@ async function listFiles(req, res) {
 
     res.render('files/index', { files });
   } catch (error) {
-    console.error(error);
+    next(error);
   }
 }
 
-async function showFileById(req, res) {
+async function showFileById(req, res, next) {
   try {
     const fileId = parseInt(req.params.id);
 
@@ -50,7 +50,9 @@ async function showFileById(req, res) {
     });
 
     if (!file) {
-      return res.status(404).send('File not found');
+      return res.status(404).render('errorPage', {
+        message: "Sorry! File doesn't exist",
+      });
     }
 
     //check if file belongs to that user
@@ -62,11 +64,11 @@ async function showFileById(req, res) {
 
     res.render('files/show', { file });
   } catch (error) {
-    console.error(error);
+    next(error);
   }
 }
 
-async function downloadFile(req, res) {
+async function downloadFile(req, res, next) {
   try {
     const fileId = parseInt(req.params.id);
 
@@ -75,7 +77,9 @@ async function downloadFile(req, res) {
     });
 
     if (!file) {
-      return res.status(404).send('File not found');
+      return res.status(404).render('errorPage', {
+        message: "Sorry! File doesn't exist",
+      });
     }
 
     //check if file belongs to that user
@@ -92,7 +96,7 @@ async function downloadFile(req, res) {
     res.setHeader('Content-Type', response.headers.get('content-type'));
     res.send(Buffer.from(buffer));
   } catch (error) {
-    console.error(error);
+    next(error);
   }
 }
 

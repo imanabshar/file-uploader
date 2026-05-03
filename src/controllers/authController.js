@@ -11,7 +11,7 @@ function showLoginForm(req, res) {
   res.render('login');
 }
 
-async function postSignUpForm(req, res) {
+async function postSignUpForm(req, res, next) {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -28,14 +28,24 @@ async function postSignUpForm(req, res) {
 
     const { firstName, lastName, email, username, password } = matchedData(req);
 
-    const existingUser = await prisma.user.findUnique({
-      where: { username },
+    const existingUser = await prisma.user.findFirst({
+      where: {
+        OR: [{ username }, { email }],
+      },
     });
 
-    //if username already exits
+    //if username or email already exits
     if (existingUser) {
       return res.render('signup', {
-        errors: [{ msg: 'username already exists' }],
+        errors: [
+          {
+            msg:
+              existingUser.username === username
+                ? 'Username already exists'
+                : 'Email already exists',
+          },
+        ],
+        oldInput: { firstName, lastName, email, username },
       });
     }
 
@@ -51,6 +61,7 @@ async function postSignUpForm(req, res) {
       },
     });
 
+    //auto login, right after creating account you are logged in
     req.logIn(user, (err) => {
       if (err) {
         console.error(err);
@@ -60,8 +71,8 @@ async function postSignUpForm(req, res) {
       }
       res.redirect('/');
     });
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    next(error);
   }
 }
 
@@ -87,8 +98,8 @@ async function postLoginForm(req, res, next) {
         return res.redirect('/');
       });
     })(req, res, next);
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    next(error);
   }
 }
 

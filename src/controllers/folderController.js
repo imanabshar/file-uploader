@@ -4,7 +4,7 @@ function showCreateFolderForm(req, res) {
   res.render('folders/create');
 }
 
-async function postCreateFolder(req, res) {
+async function postCreateFolder(req, res, next) {
   const { folderName } = req.body;
   try {
     await prisma.folder.create({
@@ -15,11 +15,11 @@ async function postCreateFolder(req, res) {
     });
     res.redirect('/folders');
   } catch (error) {
-    console.error(error);
+    next(error);
   }
 }
 
-async function listFolders(req, res) {
+async function listFolders(req, res, next) {
   try {
     const folders = await prisma.folder.findMany({
       where: { userId: req.user.id },
@@ -27,17 +27,23 @@ async function listFolders(req, res) {
 
     res.render('folders/index', { folders });
   } catch (error) {
-    console.error(error);
+    next(error);
   }
 }
 
-async function deleteFolder(req, res) {
+async function deleteFolder(req, res, next) {
   try {
     const folderId = parseInt(req.params.id);
 
     const folder = await prisma.folder.findUnique({
       where: { id: folderId },
     });
+
+    if (!folder) {
+      return res.status(404).render('errorPage', {
+        message: "Sorry! Folder doesn't exist",
+      });
+    }
 
     //check if the folder to be deleted belongs to that user
     // 403 -> resource exist, you don't have permission to access it
@@ -54,28 +60,38 @@ async function deleteFolder(req, res) {
 
     res.redirect('/folders');
   } catch (error) {
-    console.error(error);
+    next(error);
   }
 }
 
-async function showEditFolderForm(req, res) {
-  const folderId = parseInt(req.params.id);
+async function showEditFolderForm(req, res, next) {
+  try {
+    const folderId = parseInt(req.params.id);
 
-  const folder = await prisma.folder.findUnique({
-    where: { id: folderId },
-  });
-
-  //before rendering edit form of folder, check if that folder belongs to user
-  if (folder.userId !== req.user.id) {
-    return res.status(403).render('errorPage', {
-      message: 'Insufficient Permission',
+    const folder = await prisma.folder.findUnique({
+      where: { id: folderId },
     });
-  }
 
-  res.render('folders/edit', { folder });
+    if (!folder) {
+      return res.status(404).render('errorPage', {
+        message: "Sorry! Folder doesn't exist",
+      });
+    }
+
+    //before rendering edit form of folder, check if that folder belongs to user
+    if (folder.userId !== req.user.id) {
+      return res.status(403).render('errorPage', {
+        message: 'Insufficient Permission',
+      });
+    }
+
+    res.render('folders/edit', { folder });
+  } catch (error) {
+    next(error);
+  }
 }
 
-async function editFolder(req, res) {
+async function editFolder(req, res, next) {
   try {
     const folderId = parseInt(req.params.id);
     const { folderName } = req.body;
@@ -83,6 +99,12 @@ async function editFolder(req, res) {
     const folder = await prisma.folder.findUnique({
       where: { id: folderId },
     });
+
+    if (!folder) {
+      return res.status(404).render('errorPage', {
+        message: "Sorry! Folder doesn't exist",
+      });
+    }
 
     //check if the folder to be edited belongs to that user
     if (folder.userId !== req.user.id) {
@@ -98,7 +120,7 @@ async function editFolder(req, res) {
 
     res.redirect('/folders');
   } catch (error) {
-    console.error(error);
+    next(error);
   }
 }
 
@@ -112,7 +134,9 @@ async function showFolderById(req, res, next) {
     });
 
     if (!folder) {
-      return res.status(404).send('Folder not found');
+      return res.status(404).render('errorPage', {
+        message: "Sorry! Folder doesn't exist",
+      });
     }
 
     //before showing folder, make sure it must belongs to that user
@@ -123,8 +147,8 @@ async function showFolderById(req, res, next) {
     }
 
     res.render('folders/show', { folder });
-  } catch (err) {
-    next(err);
+  } catch (error) {
+    next(error);
   }
 }
 

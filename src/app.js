@@ -50,4 +50,12 @@ app.use('/auth', authRoutes);
 app.use('/files', fileRoutes);
 app.use('/folders', folderRoutes);
 
+//global error handler
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(err.status || 500).render('errorPage', {
+    message: err.message || 'Something went wrong',
+  });
+});
+
 export default app;
