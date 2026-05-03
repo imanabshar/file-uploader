@@ -1,4 +1,5 @@
 import { prisma } from '../lib/prisma.js';
+import parseId from '../lib/parseId.js';
 
 async function showUploadForm(req, res) {
   const folderId = req.query.folderId || null;
@@ -43,7 +44,8 @@ async function listFiles(req, res, next) {
 
 async function showFileById(req, res, next) {
   try {
-    const fileId = parseInt(req.params.id);
+    const fileId = parseId(req.params.id, res);
+    if (!fileId) return;
 
     const file = await prisma.file.findUnique({
       where: { id: fileId },
@@ -70,7 +72,8 @@ async function showFileById(req, res, next) {
 
 async function downloadFile(req, res, next) {
   try {
-    const fileId = parseInt(req.params.id);
+    const fileId = parseId(req.params.id, res);
+    if (!fileId) return;
 
     const file = await prisma.file.findUnique({
       where: { id: fileId },

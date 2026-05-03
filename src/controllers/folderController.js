@@ -1,4 +1,5 @@
 import { prisma } from '../lib/prisma.js';
+import parseId from '../lib/parseId.js';
 
 function showCreateFolderForm(req, res) {
   res.render('folders/create');
@@ -33,7 +34,8 @@ async function listFolders(req, res, next) {
 
 async function deleteFolder(req, res, next) {
   try {
-    const folderId = parseInt(req.params.id);
+    const folderId = parseId(req.params.id, res);
+    if (!folderId) return;
 
     const folder = await prisma.folder.findUnique({
       where: { id: folderId },
@@ -66,7 +68,8 @@ async function deleteFolder(req, res, next) {
 
 async function showEditFolderForm(req, res, next) {
   try {
-    const folderId = parseInt(req.params.id);
+    const folderId = parseId(req.params.id, res);
+    if (!folderId) return;
 
     const folder = await prisma.folder.findUnique({
       where: { id: folderId },
@@ -93,7 +96,9 @@ async function showEditFolderForm(req, res, next) {
 
 async function editFolder(req, res, next) {
   try {
-    const folderId = parseInt(req.params.id);
+    const folderId = parseId(req.params.id, res);
+    if (!folderId) return;
+
     const { folderName } = req.body;
 
     const folder = await prisma.folder.findUnique({
@@ -126,7 +131,8 @@ async function editFolder(req, res, next) {
 
 async function showFolderById(req, res, next) {
   try {
-    const folderId = parseInt(req.params.id);
+    const folderId = parseId(req.params.id, res);
+    if (!folderId) return;
 
     const folder = await prisma.folder.findUnique({
       where: { id: folderId },
