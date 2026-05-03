@@ -11,8 +11,6 @@ async function postUploadFile(req, res) {
       return res.render('upload', { error: 'Please select a file' });
     }
 
-    console.log(req.file);
-
     const folderId = req.query.folderId ? parseInt(req.query.folderId) : null;
 
     await prisma.file.create({
@@ -55,6 +53,13 @@ async function showFileById(req, res) {
       return res.status(404).send('File not found');
     }
 
+    //check if file belongs to that user
+    if (file.userId !== req.user.id) {
+      return res.status(403).render('errorPage', {
+        message: 'Insufficient Permission',
+      });
+    }
+
     res.render('files/show', { file });
   } catch (error) {
     console.error(error);
@@ -71,6 +76,13 @@ async function downloadFile(req, res) {
 
     if (!file) {
       return res.status(404).send('File not found');
+    }
+
+    //check if file belongs to that user
+    if (file.userId !== req.user.id) {
+      return res.status(403).render('errorPage', {
+        message: 'Insufficient Permission',
+      });
     }
 
     const response = await fetch(file.url);

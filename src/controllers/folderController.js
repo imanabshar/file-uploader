@@ -35,6 +35,19 @@ async function deleteFolder(req, res) {
   try {
     const folderId = parseInt(req.params.id);
 
+    const folder = await prisma.folder.findUnique({
+      where: { id: folderId },
+    });
+
+    //check if the folder to be deleted belongs to that user
+    // 403 -> resource exist, you don't have permission to access it
+    if (folder.userId !== req.user.id) {
+      return res.status(403).render('errorPage', {
+        message: 'Insufficient Permission',
+      });
+    }
+
+    //delete folder after verifyig that it belongs to that user
     await prisma.folder.delete({
       where: { id: folderId },
     });
@@ -47,9 +60,18 @@ async function deleteFolder(req, res) {
 
 async function showEditFolderForm(req, res) {
   const folderId = parseInt(req.params.id);
+
   const folder = await prisma.folder.findUnique({
     where: { id: folderId },
   });
+
+  //before rendering edit form of folder, check if that folder belongs to user
+  if (folder.userId !== req.user.id) {
+    return res.status(403).render('errorPage', {
+      message: 'Insufficient Permission',
+    });
+  }
+
   res.render('folders/edit', { folder });
 }
 
@@ -57,6 +79,17 @@ async function editFolder(req, res) {
   try {
     const folderId = parseInt(req.params.id);
     const { folderName } = req.body;
+
+    const folder = await prisma.folder.findUnique({
+      where: { id: folderId },
+    });
+
+    //check if the folder to be edited belongs to that user
+    if (folder.userId !== req.user.id) {
+      return res.status(403).render('errorPage', {
+        message: 'Insufficient Permission',
+      });
+    }
 
     await prisma.folder.update({
       where: { id: folderId },
@@ -80,6 +113,13 @@ async function showFolderById(req, res, next) {
 
     if (!folder) {
       return res.status(404).send('Folder not found');
+    }
+
+    //before showing folder, make sure it must belongs to that user
+    if (folder.userId !== req.user.id) {
+      return res.status(403).render('errorPage', {
+        message: 'Insufficient Permission',
+      });
     }
 
     res.render('folders/show', { folder });
