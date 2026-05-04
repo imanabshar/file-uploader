@@ -1,22 +1,81 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Upload File</title>
-  </head>
-  <body>
-    <h1>Upload File</h1>
+<div class="max-w-2xl mx-auto">
+  <div
+    class="bg-white rounded-lg shadow-sm border border-gray-200 p-8 relative"
+  >
+    <a
+      href="<%= locals.folderId ? `/folders/${locals.folderId}` : '/files' %>"
+      class="absolute right-6 top-6 text-gray-500 hover:text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-full p-3 transition duration-200"
+      aria-label="Cancel upload"
+    >
+      <i class="fa-solid fa-times"></i>
+    </a>
+
+    <div class="text-center mb-8">
+      <i class="fa-solid fa-cloud-upload-alt text-6xl text-indigo-500 mb-4"></i>
+      <h1 class="text-3xl font-bold text-gray-800">Upload File</h1>
+      <p class="text-gray-600">Select a file to upload to your storage</p>
+    </div>
+
     <% if (locals.error) { %>
-    <p><%= error %></p>
+    <div class="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
+      <p class="text-red-700"><%= error %></p>
+    </div>
     <% } %>
 
     <form
       action="/files/upload?folderId=<%= locals.folderId || '' %>"
       method="POST"
       enctype="multipart/form-data"
+      class="space-y-6"
     >
-      <input type="file" name="file" />
-      <button type="submit">Upload</button>
+      <div
+        class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-indigo-400 transition duration-200"
+      >
+        <div class="space-y-4">
+          <i class="fa-solid fa-file-upload text-4xl text-gray-400"></i>
+          <div>
+            <p class="text-lg text-gray-600 mb-2">
+              Click to browse and upload your file
+            </p>
+            <p class="text-sm text-gray-500">
+              Supported formats: JPG, JPEG, PNG, PDF, DOC, DOCX (max 8MB)
+            </p>
+          </div>
+          <input
+            type="file"
+            name="file"
+            id="file"
+            class="hidden"
+            onchange="updateFileName()"
+          />
+          <label
+            for="file"
+            class="inline-block bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition duration-200 cursor-pointer"
+          >
+            <i class="fa-solid fa-folder-open mr-2"></i>Choose File
+          </label>
+          <p id="file-name" class="text-sm text-gray-600 mt-2"></p>
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        class="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 transition duration-200 font-medium"
+      >
+        Upload File
+      </button>
     </form>
-  </body>
-</html>
+  </div>
+</div>
+
+<script>
+  function updateFileName() {
+    const fileInput = document.getElementById('file');
+    const fileNameDisplay = document.getElementById('file-name');
+    if (fileInput.files.length > 0) {
+      fileNameDisplay.textContent = `Selected: ${fileInput.files[0].name}`;
+    } else {
+      fileNameDisplay.textContent = '';
+    }
+  }
+</script>

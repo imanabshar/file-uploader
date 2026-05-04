@@ -5,6 +5,7 @@ import { prisma } from './lib/prisma.js';
 import configurePassport from './config/passport.js';
 import { fileURLToPath } from 'url';
 import path from 'path';
+import expressLayouts from 'express-ejs-layouts';
 
 import authRoutes from './routes/authRoutes.js';
 import fileRoutes from './routes/fileRoutes.js';
@@ -18,6 +19,9 @@ const app = express();
 // configure ejs
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+
+app.use(expressLayouts);
+app.set('layout', 'layout');
 
 // middlewares
 app.use(express.urlencoded({ extended: true }));
@@ -42,10 +46,17 @@ const passport = configurePassport();
 app.use(passport.initialize());
 app.use(passport.session());
 
+// set locals user
+app.use((req, res, next) => {
+  res.locals.user = req.user;
+  next();
+});
+
 // routes
 app.get('/', (req, res) => {
   res.render('index', { user: req.user });
 });
+
 app.use('/auth', authRoutes);
 app.use('/files', fileRoutes);
 app.use('/folders', folderRoutes);

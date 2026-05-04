@@ -1,0 +1,50 @@
+<header class="bg-white border-b border-gray-200 shadow-sm">
+  <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+    <a href="/" class="text-xl font-bold text-indigo-600 tracking-tight">
+      <i class="fa-solid fa-cloud-arrow-up mr-2"></i>File Uploader
+    </a>
+
+    <nav class="flex items-center gap-4">
+      <% if (locals.user) { %>
+      <a
+        href="/folders"
+        class="text-sm text-gray-600 hover:text-indigo-600 transition"
+      >
+        <i class="fa-solid fa-folder mr-1"></i>Folders
+      </a>
+      <a
+        href="/files"
+        class="text-sm text-gray-600 hover:text-indigo-600 transition"
+      >
+        <i class="fa-solid fa-file mr-1"></i>Files
+      </a>
+      <a
+        href="/files/upload"
+        class="text-sm text-gray-600 hover:text-indigo-600 transition"
+      >
+        <i class="fa-solid fa-upload mr-1"></i>Upload
+      </a>
+      <form action="/auth/logout" method="POST">
+        <button
+          type="submit"
+          class="text-sm bg-indigo-600 text-white px-4 py-1.5 rounded-full hover:bg-indigo-700 transition"
+        >
+          Logout
+        </button>
+      </form>
+      <% } else { %>
+      <a
+        href="/auth/login"
+        class="text-sm text-gray-600 hover:text-indigo-600 transition"
+        >Login</a
+      >
+      <a
+        href="/auth/signup"
+        class="text-sm bg-indigo-600 text-white px-4 py-1.5 rounded-full hover:bg-indigo-700 transition"
+      >
+        Sign Up
+      </a>
+      <% } %>
+    </nav>
+  </div>
+</header>
