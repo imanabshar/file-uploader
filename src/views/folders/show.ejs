@@ -87,7 +87,7 @@
             </div>
             <div>
               <a
-                href="/files/<%= file.id %>"
+                href="/files/<%= file.id %>?returnTo=/folders/<%= folder.id %>"
                 class="text-lg font-medium text-gray-800 hover:text-indigo-600 transition duration-200"
               >
                 <%= file.name %>
@@ -108,7 +108,7 @@
               <i class="fa-solid fa-download"></i>
             </a>
             <a
-              href="/files/<%= file.id %>"
+              href="/files/<%= file.id %>?returnTo=/folders/<%= folder.id %>"
               class="text-gray-600 hover:text-indigo-600 p-2 rounded-lg hover:bg-gray-50 transition duration-200"
             >
               <i class="fa-solid fa-eye"></i>

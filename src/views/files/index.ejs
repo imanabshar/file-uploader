@@ -5,7 +5,7 @@
       <p class="text-gray-600 mt-1">Manage and view your uploaded files</p>
     </div>
     <a
-      href="/files/upload"
+      href="/files/upload?returnTo=/files"
       class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition duration-200"
     >
       <i class="fa-solid fa-upload mr-2"></i>Upload File
@@ -18,7 +18,7 @@
     <h3 class="text-lg font-medium text-gray-800 mb-2">No files yet</h3>
     <p class="text-gray-600 mb-6">Start by uploading your first file</p>
     <a
-      href="/files/upload"
+      href="/files/upload?returnTo=/files"
       class="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition duration-200"
     >
       Upload Your First File
@@ -43,7 +43,7 @@
             </div>
             <div>
               <a
-                href="/files/<%= file.id %>"
+                href="/files/<%= file.id %>?returnTo=/files"
                 class="text-lg font-medium text-gray-800 hover:text-indigo-600 transition duration-200"
               >
                 <%= file.name %>
@@ -58,7 +58,7 @@
           </div>
           <div class="flex items-center space-x-2">
             <a
-              href="/files/<%= file.id %>"
+              href="/files/<%= file.id %>?returnTo=/files"
               class="text-indigo-600 hover:text-indigo-700 p-2 rounded-lg hover:bg-indigo-50 transition duration-200"
             >
               <i class="fa-solid fa-eye"></i>

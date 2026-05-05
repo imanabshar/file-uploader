@@ -3,16 +3,26 @@ import parseId from '../lib/parseId.js';
 
 async function showUploadForm(req, res) {
   const folderId = req.query.folderId || null;
-  res.render('files/upload', { folderId });
+  const returnTo =
+    req.query.returnTo || (folderId ? `/folders/${folderId}` : '/files');
+  res.render('files/upload', { folderId, returnTo });
 }
 
 async function postUploadFile(req, res, next) {
   try {
-    if (!req.file) {
-      return res.render('files/upload', { error: 'Please select a file' });
-    }
-
     const folderId = req.query.folderId ? parseInt(req.query.folderId) : null;
+    const returnTo =
+      req.body.returnTo ||
+      req.query.returnTo ||
+      (folderId ? `/folders/${folderId}` : '/files');
+
+    if (!req.file) {
+      return res.render('files/upload', {
+        error: 'Please select a file',
+        folderId,
+        returnTo,
+      });
+    }
 
     await prisma.file.create({
       data: {
@@ -24,7 +34,7 @@ async function postUploadFile(req, res, next) {
       },
     });
 
-    res.redirect('/');
+    res.redirect(returnTo);
   } catch (error) {
     next(error);
   }
@@ -64,7 +74,8 @@ async function showFileById(req, res, next) {
       });
     }
 
-    res.render('files/show', { file });
+    const returnTo = req.query.returnTo || '/files';
+    res.render('files/show', { file, returnTo });
   } catch (error) {
     next(error);
   }
