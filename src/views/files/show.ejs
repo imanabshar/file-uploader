@@ -11,8 +11,8 @@
       <h1 class="text-3xl font-bold text-gray-800"><%= file.name %></h1>
     </div>
 
-    <div class="grid md:grid-cols-2 gap-6 mb-8">
-      <div class="bg-gray-50 rounded-lg p-4">
+    <div class="mb-8">
+      <div class="bg-gray-50 rounded-lg p-4 max-w-md mx-auto">
         <h3
           class="text-sm font-medium text-gray-500 uppercase tracking-wide mb-2"
         >
@@ -29,7 +29,7 @@
           <div class="flex justify-between">
             <span class="text-gray-600">Uploaded:</span>
             <span class="font-medium"
-              ><%= file.uploadedAt.toDateString() %></span
+              ><%= file.uploadedAt.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %></span
             >
           </div>
           <% if (file.folder) { %>
@@ -46,20 +46,13 @@
         </div>
       </div>
 
-      <div class="bg-gray-50 rounded-lg p-4">
-        <h3
-          class="text-sm font-medium text-gray-500 uppercase tracking-wide mb-2"
+      <div class="mt-4 text-center">
+        <a
+          href="/files/<%= file.id %>/download"
+          class="inline-block bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition duration-200"
         >
-          Actions
-        </h3>
-        <div class="space-y-3">
-          <a
-            href="/files/<%= file.id %>/download"
-            class="block w-full bg-indigo-600 text-white text-center py-2 px-4 rounded-lg hover:bg-indigo-700 transition duration-200"
-          >
-            <i class="fa-solid fa-download mr-2"></i>Download File
-          </a>
-        </div>
+          <i class="fa-solid fa-download mr-2"></i>Download File
+        </a>
       </div>
     </div>
 

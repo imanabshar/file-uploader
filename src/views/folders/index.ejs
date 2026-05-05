@@ -41,7 +41,8 @@
               <%= folder.name %>
             </a>
             <p class="text-sm text-gray-600">
-              Created <%= folder.createdAt.toDateString() %>
+              Created: <%= folder.createdAt.toLocaleDateString('en-US', { year:
+              'numeric', month: 'long', day: 'numeric' }) %>
             </p>
           </div>
         </div>

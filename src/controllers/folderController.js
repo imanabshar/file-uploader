@@ -24,6 +24,7 @@ async function listFolders(req, res, next) {
   try {
     const folders = await prisma.folder.findMany({
       where: { userId: req.user.id },
+      include: { _count: { select: { files: true } } },
     });
 
     res.render('folders/index', { folders });

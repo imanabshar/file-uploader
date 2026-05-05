@@ -7,7 +7,7 @@
     </div>
 
     <% if (locals.errors) { %>
-    <ul class="text-red-600 text-sm my-4">
+    <ul class="list-disc list-inside text-red-600 text-sm my-4 space-y-1">
       <% errors.forEach(err => { %>
       <li><%= err.msg %></li>
       <% }) %>
