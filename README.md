@@ -3,6 +3,8 @@
 File Uploader is a **full-stack file management app** that enables authenticated users to securely upload, organize and manage files using cloud storage.
 <br><br>
 
+![File Uploader Preview](src/public/preview.png)
+
 ## Project Overview
 
 - Built as a hands-on project to explore **file uploads and cloud storage**
